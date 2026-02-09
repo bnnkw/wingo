@@ -83,6 +83,24 @@ def MenuFilter(id: number, key: string): bool
   popup_close(preview_winid)
   preview_winid = 0
 
+  if key == 'J'
+    win_execute(id, 'normal j')
+    var info = getwininfo(entries[line('.', id) - 1].winid)
+    if !empty(info)
+      win_gotoid(info[0].winid)
+    endif
+    return true
+  endif
+
+  if key == 'K'
+    win_execute(id, 'normal k')
+    var info = getwininfo(entries[line('.', id) - 1].winid)
+    if !empty(info)
+      win_gotoid(info[0].winid)
+    endif
+    return true
+  endif
+
   return popup_filter_menu(id, key)
 enddef
 
@@ -107,5 +125,6 @@ export def Run()
     callback: MenuCallback,
     minwidth: 40,
     maxwidth: 40,
+    tabpage: -1,
   })
 enddef

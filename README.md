@@ -49,7 +49,9 @@ nnoremap <Leader>w <Cmd>LsWin<CR>
 | Key | Action |
 |-----|--------|
 | `j` / `<Down>` / `<C-n>` | Select item below |
+| 'J' | Select item below and jump to the window |
 | `k` / `<Up>` / `<C-p>` | Select item above |
+| 'K' | Select item above and jump to the window |
 | `<Space>` / `<Enter>` | Accept selection and jump |
 | 'p' | Toggle preview of the selected window |
 | `x` / `<Esc>` / `<C-c>` | Cancel |
