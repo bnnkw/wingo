@@ -55,7 +55,6 @@ def ShowPreview(menu_winid: number, wininfo: dict<any>)
   var col = menu_pos.col + menu_pos.width + 1
   var line_nr = menu_pos.line
 
-  popup_close(preview_winid)
   preview_winid = popup_create(lines, {
     line: line_nr,
     col: col,
@@ -67,21 +66,27 @@ def ShowPreview(menu_winid: number, wininfo: dict<any>)
 enddef
 
 def MenuFilter(id: number, key: string): bool
-  var handled = popup_filter_menu(id, key)
-  if popup_getpos(id) != {}
+  # Toggle preview
+  if key == 'p'
+    if preview_winid > 0
+      popup_close(preview_winid)
+      preview_winid = 0
+      return true
+    endif
     var info = getwininfo(entries[line('.', id) - 1].winid)
     if !empty(info)
       ShowPreview(id, info[0])
     endif
+    return true
   endif
-  return handled
+
+  popup_close(preview_winid)
+  preview_winid = 0
+
+  return popup_filter_menu(id, key)
 enddef
 
 def MenuCallback(id: number, result: number)
-  if preview_winid > 0
-    popup_close(preview_winid)
-    preview_winid = 0
-  endif
   if result > 0
     win_gotoid(entries[result - 1].winid)
   endif
@@ -103,9 +108,4 @@ export def Run()
     minwidth: 40,
     maxwidth: 40,
   })
-
-  var info = getwininfo(entries[0].winid)
-  if !empty(info)
-    ShowPreview(menu_id, info[0])
-  endif
 enddef

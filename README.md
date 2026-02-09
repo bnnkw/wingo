@@ -7,8 +7,8 @@ A Vim plugin to list all windows across all tabs and jump to the selected one.
 ## Features
 
 - List all windows across all tab pages
-- Preview buffer contents as you move the cursor
 - Jump to the selected window with Enter
+- Preview buffer contents
 
 ## Entry Format
 
@@ -46,13 +46,12 @@ nnoremap <Leader>w <Cmd>LsWin<CR>
 
 ## Key Bindings
 
-Based on `popup_filter_menu()`.
-
 | Key | Action |
 |-----|--------|
 | `j` / `<Down>` / `<C-n>` | Select item below |
 | `k` / `<Up>` / `<C-p>` | Select item above |
 | `<Space>` / `<Enter>` | Accept selection and jump |
+| 'p' | Toggle preview of the selected window |
 | `x` / `<Esc>` / `<C-c>` | Cancel |
 
 ## Requirements
