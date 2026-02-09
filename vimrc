@@ -1,8 +1,13 @@
 set nocompatible
+set cursorline
 
 execute 'set runtimepath=' .. getcwd()
 runtime plugin/lswin.vim
-nnoremap <Leader>w <Cmd>LsWin<CR>
+
+hi! link StatusLine PMenu
+hi! link TabLineSel PMenu
+
+nnoremap gl <Cmd>LsWin<CR>
 
 fun! s:open_cmd_output(opencmd, cmd, opts = []) abort
   execute 'silent ' .. a:opencmd

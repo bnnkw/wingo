@@ -41,7 +41,7 @@ Plug 'bnnkw/lswin'
 ## Mapping Example
 
 ```vim
-nnoremap <Leader>w <Cmd>LsWin<CR>
+nnoremap gl <Cmd>LsWin<CR>
 ```
 
 ## Key Bindings
