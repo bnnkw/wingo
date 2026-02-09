@@ -107,6 +107,8 @@ enddef
 def MenuCallback(id: number, result: number)
   if result > 0
     win_gotoid(entries[result - 1].winid)
+  else
+    win_gotoid(entries->copy()->filter((_, e) => e.current)[0].winid)
   endif
 enddef
 
