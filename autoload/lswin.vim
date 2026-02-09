@@ -127,6 +127,7 @@ export def Run()
     callback: MenuCallback,
     minwidth: 40,
     maxwidth: 40,
+    maxheight: &lines / 3,
     tabpage: -1,
   })
 enddef

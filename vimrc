@@ -26,6 +26,10 @@ call s:open_cmd_output('topleft vnew', 'highlight', ['nomodified'])
 call s:open_cmd_output('tabnew', 'set all', ['nomodified'])
 call s:open_cmd_output('new', '', ['nomodified'])
 
+for i in range(1, 100)
+  $tabnew
+endfor
+
 tabnext 1
 
 LsWin
