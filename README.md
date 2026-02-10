@@ -1,19 +1,19 @@
-# lswin
+# wingo
 
-![lswin](lswin.png)
+![wingo](wingo.png)
 
-A Vim plugin to list all windows across all tabs and jump to the selected one.
+A Vim plugin to go to any window across all tabs.
 
 ## Features
 
 - List all windows across all tab pages
-- Jump to the selected window with Enter
+- Go to the selected window with Enter
 - Preview buffer contents
 
 ## Entry Format
 
 ```
-> Tab:1 Win:2 [+] plugin/lswin.vim
+> Tab:1 Win:2 [+] vimrc
 ```
 
 | Element | Description |
@@ -29,19 +29,19 @@ A Vim plugin to list all windows across all tabs and jump to the selected one.
 ### vim-plug
 
 ```vim
-Plug 'bnnkw/lswin'
+Plug 'bnnkw/wingo'
 ```
 
 ## Usage
 
 ```vim
-:LsWin
+:WinLs
 ```
 
 ## Mapping Example
 
 ```vim
-nnoremap gl <Cmd>LsWin<CR>
+nnoremap gl <Cmd>WinLs<CR>
 ```
 
 ## Key Bindings
@@ -49,10 +49,10 @@ nnoremap gl <Cmd>LsWin<CR>
 | Key | Action |
 |-----|--------|
 | `j` / `<Down>` / `<C-n>` | Select item below |
-| `J` | Select item below and jump to the window |
+| `J` | Select item below and go to the window |
 | `k` / `<Up>` / `<C-p>` | Select item above |
-| `K` | Select item above and jump to the window |
-| `<Space>` / `<Enter>` | Accept selection and jump |
+| `K` | Select item above and go to the window |
+| `<Space>` / `<Enter>` | Accept selection and go |
 | `p` | Toggle preview of the selected window |
 | `x` / `<Esc>` / `<C-c>` | Cancel |
 

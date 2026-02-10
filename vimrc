@@ -2,12 +2,12 @@ set nocompatible
 set cursorline
 
 execute 'set runtimepath=' .. getcwd()
-runtime plugin/lswin.vim
+runtime plugin/wingo.vim
 
 hi! link StatusLine PMenu
 hi! link TabLineSel PMenu
 
-nnoremap gl <Cmd>LsWin<CR>
+nnoremap gl <Cmd>WinLs<CR>
 
 fun! s:open_cmd_output(opencmd, cmd, opts = []) abort
   execute 'silent ' .. a:opencmd
@@ -37,4 +37,4 @@ endfor
 
 tabnext 1
 
-LsWin
+WinLs
