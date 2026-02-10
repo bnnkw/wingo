@@ -58,4 +58,5 @@ nnoremap gl <Cmd>WinLs<CR>
 
 ## Requirements
 
-- Vim 9.0+ with +popupwin
+- +vim9script
+- +popupwin
