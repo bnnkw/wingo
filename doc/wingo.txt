@@ -24,12 +24,12 @@ Mapping example ~
 
 Wingo does not define any mapping.  Add one to your |vimrc|: >vim
 
-	nnoremap gl <Cmd>WinLs<CR>
+	nnoremap gl <Cmd>WinGo<CR>
 <
 ==============================================================================
-COMMAND							*:WinLs*
+COMMAND							*:WinGo*
 
-:WinLs		Open a popup menu listing all windows across all tab
+:WinGo		Open a popup menu listing all windows across all tab
 		pages.  Select a window to go to.
 
 		Each entry is displayed as: >

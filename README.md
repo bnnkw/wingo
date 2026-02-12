@@ -35,13 +35,13 @@ Plug 'bnnkw/wingo'
 ## Usage
 
 ```vim
-:WinLs
+:WinGo
 ```
 
 ## Mapping Example
 
 ```vim
-nnoremap gl <Cmd>WinLs<CR>
+nnoremap gl <Cmd>WinGo<CR>
 ```
 
 ## Key Bindings
