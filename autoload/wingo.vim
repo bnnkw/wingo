@@ -3,36 +3,21 @@ vim9script
 var preview_winid: number = 0
 var entries: list<dict<any>> = []
 
-def ListWindows(): list<number>
-  var result: list<number> = []
-  var tabnr_last = tabpagenr('$')
-
-  for tabnr in range(1, tabnr_last)
-    var buflist = tabpagebuflist(tabnr)
-    for winnr in range(1, len(buflist))
-      result->add(win_getid(winnr, tabnr))
-    endfor
-  endfor
-
-  return result
-enddef
-
-def WindowToEntry(winid: number): dict<any>
-  var [tabnr, winnr] = win_id2tabwin(winid)
-  var bufnr = winbufnr(winid)
+def WindowToEntry(win: dict<any>): dict<any>
+  var cur_bufnr = winbufnr(0)
   return {
-    tabnr: tabnr,
-    winnr: winnr,
-    winid: winid,
-    bufnr: bufnr,
-    bufname: bufname(bufnr),
-    modified: getbufvar(bufnr, '&modified'),
-    current: winid == win_getid(),
+    tabnr: win.tabnr,
+    winnr: win.winnr,
+    winid: win.winid,
+    bufnr: win.bufnr,
+    bufname: bufname(win.bufnr),
+    modified: getbufvar(win.bufnr, '&modified'),
+    current: cur_bufnr == win.bufnr,
   }
 enddef
 
-def WindowsToEntries(winids: list<number>): list<dict<any>>
-  return winids->mapnew((_, id) => WindowToEntry(id))
+def WindowsToEntries(wins: list<dict<any>>): list<dict<any>>
+  return wins->mapnew((_, w) => WindowToEntry(w))
 enddef
 
 def FormatEntry(entry: dict<any>): string
@@ -113,13 +98,8 @@ def MenuCallback(id: number, result: number)
 enddef
 
 export def Run()
-  var winids = ListWindows()
-  if empty(winids)
-    return
-  endif
-
-  entries = WindowsToEntries(winids)
-
+  var wins = getwininfo()
+  entries = WindowsToEntries(wins)
   var menu_id = popup_menu(FormatEntries(entries), {
     pos: 'center',
     title: ' Windows ',
