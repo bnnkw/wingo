@@ -1,5 +1,7 @@
 vim9script
 
+var winid_opening_popup: number = 0
+
 var preview_winid: number = 0
 var entries: list<dict<any>> = []
 
@@ -95,7 +97,7 @@ enddef
 
 def MenuCallback(id: number, result: number)
   if result > 0
-    PushHistory(win_getid())
+    PushHistory(winid_opening_popup)
     win_gotoid(entries[result - 1].winid)
   else
     win_gotoid(entries->copy()->filter((_, e) => e.current)[0].winid)
@@ -107,6 +109,7 @@ export def GetHistoryState(): dict<any>
 enddef
 
 export def Run()
+  winid_opening_popup = win_getid()
   var wins = getwininfo()
   entries = WindowsToEntries(wins)
   var menu_id = popup_menu(FormatEntries(entries), {
