@@ -3,6 +3,10 @@ vim9script
 var preview_winid: number = 0
 var entries: list<dict<any>> = []
 
+const HISTORY_MAX = 5
+var history: list<number> = []
+var history_pos: number = -1
+
 def WindowToEntry(win: dict<any>): dict<any>
   var cur_bufnr = winbufnr(0)
   return {
@@ -91,10 +95,15 @@ enddef
 
 def MenuCallback(id: number, result: number)
   if result > 0
+    PushHistory(win_getid())
     win_gotoid(entries[result - 1].winid)
   else
     win_gotoid(entries->copy()->filter((_, e) => e.current)[0].winid)
   endif
+enddef
+
+export def GetHistoryState(): dict<any>
+  return { history: copy(history), pos: history_pos }
 enddef
 
 export def Run()
@@ -110,4 +119,58 @@ export def Run()
     maxheight: &lines / 3,
     tabpage: -1,
   })
+enddef
+
+export def ShowHistory()
+  var lines = ['  history tab win bufname']
+  var len = len(history)
+  for i in range(len)
+    var info = getwininfo(history[i])
+    if empty(info)
+      continue
+    endif
+    var marker = len - (i + 1) == history_pos ? '>' : ' '
+    var win = info[0]
+    add(lines, printf('%s %4d %5d %5d %s',
+      marker, len - i, win.tabnr, win.winid, bufname(win.bufnr)))
+  endfor
+  if history_pos == -1
+    add(lines, '>')
+  endif
+  echo join(lines, "\n")
+enddef
+
+export def ClearHistory()
+  history = []
+  history_pos = -1
+enddef
+
+export def PushHistory(winid: number)
+  if !empty(history) && history[len(history) - 1] == winid
+    return
+  endif
+  if len(history) >= HISTORY_MAX
+    history = history[1 : ]
+  endif
+  add(history, winid)
+enddef
+
+export def PrevHistory()
+  if history_pos >= len(history) - 1
+    echohl ErrorMsg
+      | echomsg 'WinGo: already at oldest history entry'
+      | echohl None
+    return
+  endif
+  history_pos = history_pos + 1
+enddef
+
+export def NextHistory()
+  if history_pos <= 0
+    echohl ErrorMsg
+      | echomsg 'WinGo: already at newest history entry'
+      | echohl None
+    return
+  endif
+  history_pos = history_pos - 1
 enddef
