@@ -103,7 +103,7 @@ def MenuCallback(id: number, result: number)
   endif
 enddef
 
-const HISTORY_MAX = 5
+const HISTORY_MAX = 10
 var history: list<number> = []
 var history_pos: number = -1
 
