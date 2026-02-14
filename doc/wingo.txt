@@ -27,8 +27,9 @@ Wingo does not define any mapping.  Add one to your |vimrc|: >vim
 	nnoremap gl <Cmd>WinGo<CR>
 <
 ==============================================================================
-COMMAND							*:WinGo*
+COMMAND						*wingo-commands*
 
+						*:WinGo*
 :WinGo		Open a popup menu listing all windows across all tab
 		pages.  Select a window to go to.
 
@@ -37,6 +38,18 @@ COMMAND							*:WinGo*
 <
 		">" marks the current window.  "[+]" indicates
 		unsaved changes.
+
+						*:WinGoHistory*
+:WinGoHistory		Show the history.
+
+						*:WinGoHistoryClear*
+:WinGoHistoryClear	Clear the history.
+
+						*:WinGoHistoryPrev*
+:WinGoHistoryPrev	Go to the previous window in the history.
+
+						*:WinGoHistoryNext*
+:WinGoHistoryNext	Go to the next window in the history.
 
 ==============================================================================
 POPUP MENU KEYS						*wingo-keys*
@@ -65,6 +78,30 @@ Preview ~
 Pressing `p` in the popup menu opens a side popup showing the content
 of the selected window's buffer.  Press `p` again to close it.
 Moving the selection also closes the preview.
+
+==============================================================================
+History						*wingo-history*
+
+WinGo has a history that works like |jumplist|.
+
+A window is added to the history on two occasions: when you press
+<CR> in the popup menu opened by |:WinGo|, and when you execute
+|:WinGoHistoryPrev|.  In the former case, the window where the popup
+was opened is remembered.  In the latter, the window where the
+command was executed is remembered.
+
+A window is not added if it is the same as the most recent entry
+in the history.
+
+The history holds up to 10 entries.  When the limit is exceeded,
+the oldest entry is removed.
+
+If a new window is added while navigating through the history,
+the entries after the current position are discarded and a new
+history is started from there, just like |jumplist-stack|.
+
+Use |:WinGoHistoryPrev| and |:WinGoHistoryNext| to navigate
+the history, and |:WinGoHistory| to show the current entries.
 
 ==============================================================================
  vim:tw=78:ts=8:noet:ft=help:norl:
