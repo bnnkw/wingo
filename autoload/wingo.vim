@@ -5,10 +5,6 @@ var winid_opening_popup: number = 0
 var preview_winid: number = 0
 var entries: list<dict<any>> = []
 
-const HISTORY_MAX = 5
-var history: list<number> = []
-var history_pos: number = -1
-
 def WindowToEntry(win: dict<any>): dict<any>
   var cur_bufnr = winbufnr(0)
   return {
@@ -97,11 +93,34 @@ enddef
 
 def MenuCallback(id: number, result: number)
   if result > 0
-    PushHistory(winid_opening_popup)
-    win_gotoid(entries[result - 1].winid)
+    var selected = entries[result - 1].winid
+    if selected != winid_opening_popup
+      PushHistory(winid_opening_popup)
+    endif
+    win_gotoid(selected)
   else
     win_gotoid(entries->copy()->filter((_, e) => e.current)[0].winid)
   endif
+enddef
+
+const HISTORY_MAX = 5
+var history: list<number> = []
+var history_pos: number = -1
+
+def CurrentHistory(): number
+  if 0 <= history_pos && history_pos < len(history)
+    return history[history_pos]
+  else
+    return 0
+  endif
+enddef
+
+def IsOldest(): bool
+  return history_pos == 0
+enddef
+
+def IsNewest(): bool
+  return history_pos == len(history) - 1
 enddef
 
 export def GetHistoryState(): dict<any>
@@ -132,7 +151,7 @@ export def ShowHistory()
     if empty(info)
       continue
     endif
-    var marker = len - (i + 1) == history_pos ? '>' : ' '
+    var marker = i == history_pos ? '>' : ' '
     var win = info[0]
     add(lines, printf('%s %4d %5d %5d %s',
       marker, len - i, win.tabnr, win.winid, bufname(win.bufnr)))
@@ -150,30 +169,70 @@ enddef
 
 export def PushHistory(winid: number)
   if !empty(history) && history[len(history) - 1] == winid
+    history_pos = -1
     return
   endif
+
+  if history_pos != -1
+    history = history[: history_pos]
+    history_pos = -1
+    return
+  endif
+
   if len(history) >= HISTORY_MAX
     history = history[1 : ]
   endif
+
   add(history, winid)
+  history_pos = -1
 enddef
 
 export def PrevHistory()
-  if history_pos >= len(history) - 1
+  if IsOldest()
     echohl ErrorMsg
       | echomsg 'WinGo: already at oldest history entry'
+      | echohl None
+    return
+  endif
+  if history_pos == -1
+    history_pos = len(history) - 1
+  else
+    history_pos = history_pos - 1
+  endif
+enddef
+
+export def NextHistory()
+  if IsNewest()
+    echohl ErrorMsg
+      | echomsg 'WinGo: already at newest history entry'
       | echohl None
     return
   endif
   history_pos = history_pos + 1
 enddef
 
-export def NextHistory()
-  if history_pos <= 0
-    echohl ErrorMsg
-      | echomsg 'WinGo: already at newest history entry'
-      | echohl None
+export def GoHistoryPrev(cur: number)
+  if IsOldest()
     return
   endif
-  history_pos = history_pos - 1
+
+  if history_pos == -1
+    PushHistory(cur)
+    history_pos = len(history) - 2
+  else
+    PrevHistory()
+  endif
+
+  var winid = CurrentHistory()
+  win_gotoid(winid)
+enddef
+
+export def GoHistoryNext()
+  if IsNewest()
+    return
+  endif
+
+  NextHistory()
+  var winid = CurrentHistory()
+  win_gotoid(winid)
 enddef
