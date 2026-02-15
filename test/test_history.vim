@@ -84,6 +84,54 @@ def Test_GoHistoryPrev()
   assert_equal(2, state.pos)
 enddef
 
+def Test_replace_WinClosed()
+  wingo.ClearHistory()
+  wingo.PushHistory(1000)
+  wingo.PushHistory(1001)
+  wingo.PushHistory(1002)
+  var group_name = 'wingo_win_closed'
+  assert_equal(3, len(autocmd_get({group: group_name})))
+  wingo.PushHistory(1000)
+  wingo.PushHistory(1001)
+  wingo.PushHistory(1002)
+  assert_equal(3, len(autocmd_get({group: group_name})))
+enddef
+
+def Test_OnWinClosed_close_bottom()
+  wingo.ClearHistory()
+  wingo.PushHistory(1000)
+  wingo.PushHistory(1001)
+  wingo.PushHistory(1002)
+  doautocmd WinClosed 1000
+  var state = wingo.GetHistoryState()
+  assert_equal([], state.history)
+  assert_equal(-1, state.pos)
+enddef
+
+def Test_OnWinClosed_close_middle()
+  wingo.ClearHistory()
+  wingo.PushHistory(1000)
+  wingo.PushHistory(1001)
+  wingo.PushHistory(1002)
+  doautocmd WinClosed 1001
+  var state = wingo.GetHistoryState()
+  assert_equal([1000], state.history)
+  assert_equal(-1, state.pos)
+  var group_name = 'wingo_win_closed'
+  assert_equal(1, len(autocmd_get({group: group_name})))
+enddef
+
+def Test_OnWinClosed_close_top()
+  wingo.ClearHistory()
+  wingo.PushHistory(1000)
+  wingo.PushHistory(1001)
+  wingo.PushHistory(1002)
+  doautocmd WinClosed 1002
+  var state = wingo.GetHistoryState()
+  assert_equal([1000, 1001], state.history)
+  assert_equal(-1, state.pos)
+enddef
+
 try
   Test_PushHistory_ignore_duplicated()
   Test_PrevHistory_clamps_at_oldest()
@@ -91,6 +139,10 @@ try
   Test_NextHistory_clamps_at_newest()
   Test_HistorySize_does_not_exceed_max()
   Test_GoHistoryPrev()
+  Test_replace_WinClosed()
+  Test_OnWinClosed_close_bottom()
+  Test_OnWinClosed_close_middle()
+  Test_OnWinClosed_close_top()
 catch /.*/
   writefile([printf("\e[1;31mNG\e[m: caught %s", v:exception)], 'test_result/error')
   cquit!

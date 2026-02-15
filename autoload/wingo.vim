@@ -103,6 +103,7 @@ def MenuCallback(id: number, result: number)
   endif
 enddef
 
+const AUGROUP_WIN_CLOSED = 'wingo_win_closed'
 const HISTORY_MAX = 10
 var history: list<number> = []
 var history_pos: number = -1
@@ -121,6 +122,39 @@ enddef
 
 def IsNewest(): bool
   return history_pos == len(history) - 1
+enddef
+
+def IndexHistory(winid: number): number
+  for i in range(len(history))
+    if history[i] == winid
+      return i
+    endif
+  endfor
+  return -1
+enddef
+
+def OnWinClosed(winid: number)
+  var idx = IndexHistory(winid)
+  if idx == -1
+    throw $'WinGo: attempt to remove winid {winid} from the history, but the window does not exist in the history {history}.'
+  endif
+
+  var acmds = []
+  for id in history[idx + 1 :]
+    add(acmds, {
+      group: AUGROUP_WIN_CLOSED,
+      event: 'WinClosed',
+      pattern: $'{id}',
+    })
+  endfor
+  autocmd_delete(acmds)
+
+  if idx == 0
+    history = []
+  else
+    history = history[0 : idx - 1]
+  endif
+  history_pos = -1
 enddef
 
 export def GetHistoryState(): dict<any>
@@ -165,6 +199,12 @@ enddef
 export def ClearHistory()
   history = []
   history_pos = -1
+  try
+    autocmd_delete([{group: AUGROUP_WIN_CLOSED}])
+  catch /.*E367/
+    # the group does not exist.
+    return
+  endtry
 enddef
 
 export def PushHistory(winid: number)
@@ -184,6 +224,14 @@ export def PushHistory(winid: number)
   endif
 
   add(history, winid)
+  autocmd_add([{
+      group: AUGROUP_WIN_CLOSED,
+      event: 'WinClosed',
+      pattern: $'{winid}',
+      once: v:true,
+      replace: v:true,
+      cmd: "OnWinClosed(str2nr(expand('<amatch>')))",
+  }])
   history_pos = -1
 enddef
 
