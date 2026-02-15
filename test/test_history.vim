@@ -2,8 +2,6 @@ vim9script
 
 import autoload '../autoload/wingo.vim'
 
-mkdir('test_result', 'p')
-
 def Test_PushHistory_ignore_duplicated()
   wingo.ClearHistory()
   wingo.PushHistory(1000)
