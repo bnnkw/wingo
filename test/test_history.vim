@@ -60,11 +60,14 @@ enddef
 
 def Test_HistorySize_does_not_exceed_max()
   wingo.ClearHistory()
-  for i in range(7)
+  for i in range(20)
     wingo.PushHistory(1000 + i)
   endfor
   var state = wingo.GetHistoryState()
-  assert_equal([1002, 1003, 1004, 1005, 1006], state.history)
+  assert_equal([
+    1010, 1011, 1012, 1013, 1014,
+    1015, 1016, 1017, 1018, 1019,
+    ], state.history)
   assert_equal(-1, state.pos)
 enddef
 
