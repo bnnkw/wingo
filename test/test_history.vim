@@ -148,7 +148,12 @@ try
   Test_OnWinClosed_close_middle()
   Test_OnWinClosed_close_top()
 catch /.*/
-  writefile([printf("\e[1;31mNG\e[m: caught %s", v:exception)], 'test_result/error')
+  writefile(
+    [
+      printf("\e[1;31mNG\e[m: caught %s", v:exception),
+      printf("\t%s", v:throwpoint),
+    ] + v:stacktrace->map((_, v) => $"\t{v}"),
+    'test_result/error')
   cquit!
 finally
   if empty(v:errors)
