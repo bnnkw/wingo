@@ -214,12 +214,27 @@ export def PushHistory(winid: number)
   endif
 
   if history_pos != -1
+    var acmds = []
+    for id in history[history_pos + 1 :]
+      add(acmds, {
+        group: AUGROUP_WIN_CLOSED,
+        event: 'WinClosed',
+        pattern: $'{id}',
+      })
+    endfor
+    autocmd_delete(acmds)
+
     history = history[: history_pos]
     history_pos = -1
     return
   endif
 
   if len(history) >= HISTORY_MAX
+    autocmd_delete([{
+      group: AUGROUP_WIN_CLOSED,
+      event: 'WinClosed',
+      pattern: $'{history[0]}',
+    }])
     history = history[1 : ]
   endif
 

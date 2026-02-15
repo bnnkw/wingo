@@ -29,6 +29,8 @@ def Test_PushHistory_on_middle()
   var state = wingo.GetHistoryState()
   assert_equal([1000, 1001], state.history)
   assert_equal(-1, state.pos)
+  var group_name = 'wingo_win_closed'
+  assert_equal(2, len(autocmd_get({group: group_name})))
 enddef
 
 def Test_PrevHistory_clamps_at_oldest()
@@ -67,6 +69,8 @@ def Test_HistorySize_does_not_exceed_max()
     1015, 1016, 1017, 1018, 1019,
     ], state.history)
   assert_equal(-1, state.pos)
+  var group_name = 'wingo_win_closed'
+  assert_equal(10, len(autocmd_get({group: group_name})))
 enddef
 
 def Test_GoHistoryPrev()
