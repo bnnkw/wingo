@@ -37,10 +37,10 @@ Plug 'bnnkw/wingo'
 ## Mapping Example
 
 ```vim
-nnoremap <C-W>gl <Cmd>WinGo<CR>
-tnoremap <C-W>gl <Cmd>WinGo<CR>
-nnoremap <C-W>gg <Cmd>WinGoHistory<CR>
-tnoremap <C-W>gg <Cmd>WinGoHistory<CR>
+nnoremap <C-W>gg <Cmd>WinGo<CR>
+tnoremap <C-W>gg <Cmd>WinGo<CR>
+nnoremap <C-W>gl <Cmd>WinGoHistory<CR>
+tnoremap <C-W>gl <Cmd>WinGoHistory<CR>
 nnoremap <C-W>go <Cmd>WinGoHistoryPrev<CR>
 tnoremap <C-W>go <Cmd>WinGoHistoryPrev<CR>
 nnoremap <C-W>gi <Cmd>WinGoHistoryNext<CR>
